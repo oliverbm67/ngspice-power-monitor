@@ -1,0 +1,92 @@
+A digital inverter circuit with power
+*
+*
+*Generate an analog voltage, send it to a adc block
+*then into an inverter and then into a dac block
+*
+*
+*Input signal
+vin1 input 0 0.0 pwl(
++0n 0 10n 0
++10.01n 1 20n 1
++20.01n 0 30n 0
++30.01n 1 40n 1
++40.01n 0 50n 0
++50.01n 1 60n 1
++60.01n 0 70n 0
++70.01n 1)
+
+
+vpower vdd 0 DC=5.0
+
+
+
+*****************************************************
+*                                                   *
+*                  Ternary test circuit             *
+*                                                   *
+*****************************************************
+
+*atc converter
+A001 [input] [ter_in] in_bridge    
+
+*Inverter
+X1 ter_in ter_inv vdd 0 inverter
+
+*tac converter
+A002 [ter_inv] [output] out_bridge
+
+
+
+*****************************************************
+*                                                   *
+*                  Subcircuit                       *
+*                                                   *
+*****************************************************
+
+.subckt inverter input output power_out ground
+* Model
+.model d_inv d_inverter
+.model power d_power_simulator
+* Logic circuit
+A1 input output d_inv
+* Power circuit
+A2 [input] [output] power_control power
+G1 power_out ground power_control ground 1
+.ends
+
+*model definition
+.model in_bridge adc_bridge
+.model out_bridge dac_bridge
+
+*****************************************************
+*                                                   *
+*                  Simulation                       *
+*                                                   *
+*****************************************************
+
+
+*Simulation instruction
+.tran 1e-12 70.1n 0
+*.dc vin1 0 1 0.01
+
+*****************************************************
+*                                                   *
+*                  Batch commands                   *
+*                                                   *
+*****************************************************
+
+.control
+
+set filetype=ascii
+
+*Run simulation
+run
+
+*Write result in file
+wrdata ngspice_output.csv input output I(vpower)
+
+.endc
+
+
+.end

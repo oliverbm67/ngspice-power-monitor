@@ -1,0 +1,60 @@
+/*.......1.........2.........3.........4.........5.........6.........7.........8
+================================================================================
+              
+AUTHOR                      
+
+    25 July 2019     Olivier Betschi
+
+
+SUMMARY
+
+    This file contains the interface specification file for the 
+    digital power simulator code model.
+
+NOTE TO AVOID CONFUSION
+
+    The connection named out, is an INPUT of the system, and is connected to the OUTPUT of the device that is modelled. The OUTPUT of the power simulator is the power_control port.
+
+===============================================================================*/
+ 
+NAME_TABLE:
+
+
+C_Function_Name:       ucm_d_power_simulator
+Spice_Model_Name:      d_power_simulator
+Description:           "ternary power manager"
+
+
+PORT_TABLE:
+
+Port_Name:           in                 out
+Description:         "input"            "output"
+Direction:           in                 in
+Default_Type:        d                  d
+Allowed_Types:       [d]                [d]
+Vector:              yes                yes
+Vector_Bounds:       [1 -]              [1 -]
+Null_Allowed:        no                 no
+
+PORT_TABLE:
+
+Port_Name:           power_control
+Description:         "power output"
+Direction:           out
+Default_Type:        v
+Allowed_Types:       [v]
+Vector:              no
+Vector_Bounds:       -
+Null_Allowed:        no
+                          
+
+PARAMETER_TABLE:
+
+Parameter_Name:     active_current             passive_current	
+Description:        "active current"           "passive current"
+Data_Type:          real                       real   
+Default_Value:      1.0                        0.5  
+Limits:             [1e-18 -]                  [1e-18 -]       
+Vector:              no                        no
+Vector_Bounds:       -                         -
+Null_Allowed:       yes                        yes  
